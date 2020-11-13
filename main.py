@@ -10,6 +10,7 @@ bord = objects.bord()
 
 run = True
 dibugmod = False
+AanZetTeam = "W"
 
 while run:
     pygame.time.delay(100)
@@ -70,6 +71,6 @@ while run:
     #chek voor chek
     chek, team, location, typ = bord.ChekFoorChek(dibugmod)
     if chek:
-        print(team, location, typ)
+        print("Team:", team, "locatie:", location, "type:", typ)
 
     pygame.display.update()
