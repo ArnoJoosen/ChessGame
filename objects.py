@@ -1,28 +1,28 @@
 import pygame
 
-################### class piece ###################
+# ################## class piece ###################
 class piece(object):
     def __init__(self, name: str, location: tuple):
-        #add name
+        # add name
         self.name = name
 
-        #add image
+        # add image
         switcher = {"KB":0, "DB":1, "TB":2, "LB":3, "PB":4, "piB":6, "KW":7, "DW":8, "TW":9, "LW":10, "PW":11, "piW":12}
         images = ['bking.png', 'bqueen.png', 'brook.png', 'bbishop.png', 'bknight.png', 'bpawn.png', 'bpawn.png', 'wking.png', 'wqueen.png', 'wrook.png', 'wbishop.png', 'wknight.png', 'wpawn.png', 'error.png']
         imagenume = switcher.get(name, 13)
         self.image = pygame.image.load('/data/backup/chesbot/chess game/images/' + images[imagenume])
 
-        #add locatie
+        # add locatie
         self.locatie = location
         self.locatiebord = (int(round(location[0]/75, 0)), int(round(location[1]/75, 0)))
 
-        #hit box
+        # hit box
         self.hitbox = (location[0], location[1], location[0] + 50, location[1] + 50)
 
-        #add aantal bewegingen
+        # add aantal bewegingen
         self.moves = 0
 
-        #add tippe en tiem
+        # add tippe en tiem
         switcher = {"KB":"K", "DB":"D", "TB":"T", "LB":"L", "PB":"P", "piB":"pi", "KW":"K", "DW":"D", "TW":"T", "LW":"L", "PW":"P", "piW":"pi"}
         self.type = switcher.get(name, "error")
         switcher = {"KB":"B", "DB":"B", "TB":"B", "LB":"B", "PB":"B", "piB":"B", "KW":"W", "DW":"W", "TW":"W", "LW":"W", "PW":"W", "piW":"W"}
@@ -33,11 +33,11 @@ class piece(object):
         #draw image
         win.blit(self.image, self.locatie)
         if dibugmod:
-            #draw hit boxen
+            # draw hit boxen
             pygame.draw.rect(win, (255, 0, 0), (self.hitbox[0], self.hitbox[1], 50, 50) , 2)
     
     def IsInHitbox(self, location: tuple, dibugmod: bool):
-        #chek of locatie in het box is
+        # chek of locatie in het box is
         if self.hitbox[0] < location[0] and self.hitbox[1] < location[1] and self.hitbox[2] > location[0] and self.hitbox[3] > location[1]:
             # print dibug info als dibugmod aan staat
             if dibugmod:
@@ -46,23 +46,23 @@ class piece(object):
         else:
             return False
 
-    #move pies naar locatie
+    # move pies naar locatie
     def Move(self, location: tuple):
-        #verander locatie
+        # verander locatie
         self.locatie = (location[0], location[1])
-        #verander locatie op het bord
+        # verander locatie op het bord
         self.locatiebord = (int(round(location[0]/75, 0)), int(round(location[1]/75, 0)))
-        #verander locaite hitbox
+        # verander locaite hitbox
         self.hitbox = (location[0], location[1], location[0] + 50, location[1] + 50)
-        #moves +1
+        # moves +1
         self.moves += 1
 
     def MogelijkeZetten(self, bord, debugmod):
         Zetten = []
         chek = False
-        #zetten voor pion zwart
+        # zetten voor pion zwart
         if self.name == "piB":
-            #chek voor (x, y+1), (x, y+2)
+            # chek voor (x, y+1), (x, y+2)
             locatie = (self.locatiebord[0],self.locatiebord[1]+1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)
@@ -73,7 +73,7 @@ class piece(object):
                         PosObject = bord.Getpiece(locatie)
                         if PosObject == None:
                             Zetten.append(locatie)
-            #chek voor (x+1, y+1)
+            # chek voor (x+1, y+1)
             locatie = (self.locatiebord[0]+1, self.locatiebord[1]+1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)
@@ -82,7 +82,7 @@ class piece(object):
                         Zetten.append(locatie)
                     else:
                         chek = True
-            #chek voor (x-1, y+1)
+            # chek voor (x-1, y+1)
             locatie = (self.locatiebord[0]-1, self.locatiebord[1]+1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)
@@ -91,14 +91,14 @@ class piece(object):
                         Zetten.append(locatie)
                     else:
                         chek = True
-            #chek voor (x-1, y-1)
+            # chek voor (x-1, y-1)
             locatie = (self.locatiebord[0]-1, self.locatiebord[1]-1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)
                 if PosObject != None:
                     if PosObject.type == "pi" and PosObject.team == "W" and PosObject.moves == 1:
                         Zetten.append(locatie)
-            #chek voor (x+1, y-1)
+            # chek voor (x+1, y-1)
             locatie = (self.locatiebord[0]+1, self.locatiebord[1]-1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)
@@ -107,9 +107,9 @@ class piece(object):
                         Zetten.append(locatie)
                 
 
-        #zetten voor pion wit
+        # zetten voor pion wit
         elif self.name == "piW":
-            #chek voor (x, y-1), (x, y-2)
+            # chek voor (x, y-1), (x, y-2)
             locatie = (self.locatiebord[0],self.locatiebord[1]-1)
             if locatie[0] <= 7 and locatie[0] >= 0 and locatie[1] <= 7 and locatie[1] >= 0:
                 PosObject = bord.Getpiece(locatie)

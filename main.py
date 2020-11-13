@@ -1,10 +1,12 @@
-import pygame, os
+import pygame
 import objects
 
 pygame.init()
 
 win = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("chess")
+
+clock = pygame.time.Clock()
 
 bord = objects.bord()
 
@@ -13,10 +15,10 @@ dibugmod = False
 AanZetTeam = "W"
 
 while run:
-    pygame.time.delay(100)
+    clock.tick(100)
 
     for event in pygame.event.get():
-        #sluiten van het programa
+        # sluiten van het programa
         if event.type == pygame.QUIT:
             run = False
         
@@ -27,14 +29,16 @@ while run:
                 for x in range(8):
                     stuk = bord.Getpiece((x, y))
                     zet = bord.GetZet((x, y))
-                    if zet != None:
+                    if zet is not None:
                         Hit = zet.IsInHitbox(pos, dibugmod)
                         if Hit:
                             find = True
                             bord.MovePies(zet.pieslock, zet.location)
                             bord.CleanZetten()
+                            switcher = {"B": "W", "W": "B"}
+                            AanZetTeam = switcher.get(AanZetTeam)
                             break
-                    elif stuk != None:
+                    elif stuk is not None and stuk.team == AanZetTeam:
                         Hit = stuk.IsInHitbox(pos, dibugmod)
                         if Hit:
                             find = True
@@ -45,7 +49,7 @@ while run:
                     break
 
         if event.type == pygame.KEYDOWN:
-            if  event.key == pygame.K_d:
+            if event.key == pygame.K_d:
                 if dibugmod:
                     dibugmod = False
                 else:
@@ -55,8 +59,8 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 bord.CleanZetten()
 
-    #draw board
-    win.fill((50,50,50))
+    # draw board
+    win.fill((50, 50, 50))
     for y in range(8):
         for x in range(4):
             if (y % 2) == 0:
@@ -65,12 +69,14 @@ while run:
                 addwaarde = 0
             pygame.draw.rect(win, (255, 255, 255), (x * 150 + addwaarde, y * 75, 75, 75))
     
-    #draw objects
+    # draw objects
     bord.Draw(win, dibugmod)
 
-    #chek voor chek
+    # chek voor chek
     chek, team, location, typ = bord.ChekFoorChek(dibugmod)
-    if chek:
-        print("Team:", team, "locatie:", location, "type:", typ)
+    if dibugmod:
+        print("fps:", clock.get_fps())
+        if chek:
+            print("Team:", team, "locatie:", location, "type:", typ)
 
     pygame.display.update()
