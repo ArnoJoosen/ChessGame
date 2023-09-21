@@ -10,7 +10,7 @@ class piece(object):
         switcher = {"KB":0, "DB":1, "TB":2, "LB":3, "PB":4, "piB":6, "KW":7, "DW":8, "TW":9, "LW":10, "PW":11, "piW":12}
         images = ['bking.png', 'bqueen.png', 'brook.png', 'bbishop.png', 'bknight.png', 'bpawn.png', 'bpawn.png', 'wking.png', 'wqueen.png', 'wrook.png', 'wbishop.png', 'wknight.png', 'wpawn.png', 'error.png']
         imagenume = switcher.get(name, 13)
-        self.image = pygame.image.load('/data/backup/chesbot/chess game/images/' + images[imagenume])
+        self.image = pygame.image.load('./images/' + images[imagenume])
 
         #add locatie
         self.locatie = location
